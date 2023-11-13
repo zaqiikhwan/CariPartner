@@ -1,4 +1,4 @@
-package com.example.belajarjetpack2.home
+package com.example.caripartner.home
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

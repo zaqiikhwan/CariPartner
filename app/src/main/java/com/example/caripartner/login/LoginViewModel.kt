@@ -1,4 +1,4 @@
-package com.example.belajarjetpack2.login
+package com.example.caripartner.login
 
 import android.content.Context
 import android.widget.Toast
@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.belajarjetpack2.repository.AuthRepository
+import com.example.caripartner.repository.AuthRepository
 import kotlinx.coroutines.launch
 
 class LoginViewModel(

@@ -1,4 +1,4 @@
-package com.example.belajarjetpack2
+package com.example.caripartner
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
@@ -6,10 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.belajarjetpack2.home.Home
-import com.example.belajarjetpack2.login.LoginScreen
-import com.example.belajarjetpack2.login.LoginViewModel
-import com.example.belajarjetpack2.login.SignUpScreen
+import com.example.caripartner.home.Home
+import com.example.caripartner.login.LoginScreen
+import com.example.caripartner.login.LoginViewModel
+import com.example.caripartner.login.SignUpScreen
 
 enum class LoginRoutes{
     SignUp,

@@ -1,4 +1,4 @@
-package com.example.belajarjetpack2.repository
+package com.example.caripartner.repository
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
