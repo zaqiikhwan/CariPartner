@@ -8,7 +8,6 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,14 +25,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -51,7 +54,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -144,6 +149,8 @@ fun LoginScreen(
             isError = isError
         )
 
+        var showPassword by remember { mutableStateOf(value = false) }
+
         Text(
             text = "Password",
             modifier = Modifier.padding(start=16.dp, top=16.dp),
@@ -171,7 +178,30 @@ fun LoginScreen(
                     fontSize = 14.sp
                 )
             },
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (showPassword) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            trailingIcon = {
+                if (showPassword) {
+                    IconButton(onClick = { showPassword = false }) {
+                        Icon(
+                            imageVector = Icons.Filled.Visibility,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { showPassword = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.VisibilityOff,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                }
+            },
             isError = isError
         )
 
@@ -350,6 +380,10 @@ fun SignUpScreen(
             isError = isError
         )
 
+//        var password by remember { mutableStateOf(value = "") }
+        var showPasswordFirst by remember { mutableStateOf(value = false) }
+        var showPasswordSecond by remember { mutableStateOf(value = false) }
+
         Text(
             text = "Password",
             modifier = Modifier.padding( top=16.dp),
@@ -370,8 +404,32 @@ fun SignUpScreen(
                     fontSize = 14.sp
                 )
             },
-            visualTransformation = PasswordVisualTransformation(),
-            isError = isError
+//            visualTransformation = PasswordVisualTransformation(),
+            isError = isError,
+            visualTransformation = if (showPasswordFirst) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            trailingIcon = {
+                if (showPasswordFirst) {
+                    IconButton(onClick = { showPasswordFirst = false }) {
+                        Icon(
+                            imageVector = Icons.Filled.Visibility,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { showPasswordFirst = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.VisibilityOff,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                }
+            }
         )
 
         Text(
@@ -394,7 +452,30 @@ fun SignUpScreen(
                     fontSize = 14.sp
                 )
             },
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (showPasswordSecond) {
+                VisualTransformation.None
+            } else {
+                PasswordVisualTransformation()
+            },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            trailingIcon = {
+                if (showPasswordSecond) {
+                    IconButton(onClick = { showPasswordSecond = false }) {
+                        Icon(
+                            imageVector = Icons.Filled.Visibility,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { showPasswordSecond = true }) {
+                        Icon(
+                            imageVector = Icons.Filled.VisibilityOff,
+                            contentDescription = "hide_password"
+                        )
+                    }
+                }
+            },
             isError = isError
         )
 
