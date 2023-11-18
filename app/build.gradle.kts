@@ -82,6 +82,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
     implementation("io.coil-kt:coil-compose:1.3.2")
+    implementation("androidx.compose.material:material-icons-extended:1.3.1")
 
 //    Hilt
 //    implementation("com.google.dagger:hilt-android:2.44")
