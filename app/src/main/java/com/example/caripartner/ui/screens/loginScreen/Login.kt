@@ -1,24 +1,34 @@
-package com.example.caripartner.login
+package com.example.caripartner.ui.screens.loginScreen
 
-import android.widget.GridLayout
+import android.content.Context
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,23 +40,28 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.caripartner.login.LoginViewModel
+import coil.compose.rememberImagePainter
 import com.example.caripartner.R
 import com.example.caripartner.ui.theme.CariPartnerTheme
-import java.time.format.TextStyle
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
+import java.io.ByteArrayOutputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,7 +73,6 @@ fun LoginScreen(
     val loginUiState = loginViewModel?.loginUiState
     val isError = loginUiState?.loginError!= null
     val context = LocalContext.current
-
 
     Column(modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.Start,
@@ -113,8 +127,8 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp),
-            value = loginUiState?.userName ?: "",
-            onValueChange = {loginViewModel?.onUserNameChange(it)},
+            value = loginUiState?.email ?: "",
+            onValueChange = {loginViewModel?.onEmailChange(it)},
 //            leadingIcon = {
 //                Icon(
 //                    imageVector = Icons.Default.Person,
@@ -164,7 +178,7 @@ fun LoginScreen(
         Button(onClick = { loginViewModel?.loginUser(context) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, top = 40.dp, bottom = 40.dp, end = 16.dp)
+                .padding(start = 16.dp, top = 40.dp, bottom = 25.dp, end = 16.dp)
                 .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 8.dp)),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
         ) {
@@ -182,8 +196,8 @@ fun LoginScreen(
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
                 fontWeight = FontWeight(600),
-                color = Color(0xFF101828),)
-            Spacer(modifier=Modifier.size(8.dp))
+                color = Color(0xFF101828),
+                modifier = Modifier.padding(top=15.dp))
             TextButton(onClick = { onNavToSignUpPage.invoke() }) {
                 Text(text = "Daftar")
             }
@@ -211,9 +225,50 @@ fun SignUpScreen(
     val loginUiState = loginViewModel?.loginUiState
     val isError = loginUiState?.signUpError!= null
     val context = LocalContext.current
+    val isUploading = remember{ mutableStateOf(false) }
+    val img:Bitmap = BitmapFactory.decodeResource(Resources.getSystem(),android.R.drawable.ic_menu_report_image)
+    val bitmap = remember { mutableStateOf(img)}
+
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.TakePicturePreview()) {
+        if(it !=null){
+            bitmap.value = it
+        }
+    }
+
+//    val launchImage = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()){
+//        imageUri = it
+//        if(Build.VERSION.SDK_INT<34){
+//           bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver,it)
+//        }else{
+//            val source = it?.let{it1 ->
+//                ImageDecoder.createSource(context.contentResolver,it)
+//            }
+//            bitmap.value = source?.let {it1->
+//                ImageDecoder.decodeBitmap(it1)
+//            }!!
+//        }
+//    }
+    val launchImage = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            imageUri = it
+            if (Build.VERSION.SDK_INT < 34) {
+                bitmap.value = MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+            } else {
+                val source = ImageDecoder.createSource(context.contentResolver, it)
+                bitmap.value = ImageDecoder.decodeBitmap(source)
+            }
+            loginViewModel?.onKtmChange(bitmap.value, imageUri!!, img.toString())
+        }
+    }
 
 
-    Column(modifier = Modifier.fillMaxSize(),
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .verticalScroll(rememberScrollState())
+        .padding(start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.Start,
     ){
         if(isError){
@@ -229,14 +284,14 @@ fun SignUpScreen(
             lineHeight = 28.sp,
             fontWeight = FontWeight(600),
             color = Color(0xFF101828),
-            modifier = Modifier.padding(vertical = 12.dp, horizontal = 16.dp),
+            modifier = Modifier.padding(vertical = 12.dp),
             textAlign = TextAlign.Right,
         )
 
         Text(
             text = "Buat akun untuk menjelajah lebih jauh",
             fontSize = 12.sp,
-            modifier = Modifier.padding(start = 16.dp, bottom = 38.dp),
+            modifier = Modifier.padding( bottom = 38.dp),
             lineHeight = 18.sp,
             fontWeight = FontWeight(400),
             color = Color(0xFF667085),
@@ -244,8 +299,8 @@ fun SignUpScreen(
         )
 
         Text(
-            text = "Email",
-            modifier = Modifier.padding(start=16.dp, top=30.dp),
+            text = "Nama",
+            modifier = Modifier.padding( top=20.dp),
             fontSize = 12.sp,
             lineHeight = 12.sp,
             fontWeight = FontWeight(600),
@@ -254,10 +309,32 @@ fun SignUpScreen(
 
         OutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
+                .fillMaxWidth(),
             value = loginUiState?.userNameSignUp ?: "",
             onValueChange = {loginViewModel?.onUserNameChangeSignUp(it)},
+            label = {
+                Text(
+                    text = "Masukkan Nama",
+                    fontSize = 14.sp
+                )
+            },
+            isError = isError
+        )
+
+        Text(
+            text = "Email",
+            modifier = Modifier.padding( top=16.dp),
+            fontSize = 12.sp,
+            lineHeight = 12.sp,
+            fontWeight = FontWeight(600),
+            color = Color(0xFF101828)
+        )
+
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = loginUiState?.emailSignUp ?: "",
+            onValueChange = {loginViewModel?.onEmailSignUpChange(it)},
 //            leadingIcon = {
 //                Icon(
 //                    imageVector = Icons.Default.Person,
@@ -275,7 +352,7 @@ fun SignUpScreen(
 
         Text(
             text = "Password",
-            modifier = Modifier.padding(start=16.dp, top=16.dp),
+            modifier = Modifier.padding( top=16.dp),
             fontSize = 12.sp,
             lineHeight = 12.sp,
             fontWeight = FontWeight(600),
@@ -284,16 +361,9 @@ fun SignUpScreen(
 
         OutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
+                .fillMaxWidth(),
             value = loginUiState?.passwordSignUp ?: "",
             onValueChange = {loginViewModel?.onPasswordChangeSignUp(it)},
-//            leadingIcon = {
-//                Icon(
-//                    imageVector = Icons.Default.Person,
-//                    contentDescription = null,
-//                )
-//            },
             label = {
                 Text(
                     text = "Masukkan Password",
@@ -306,7 +376,7 @@ fun SignUpScreen(
 
         Text(
             text = "Konfirmasi Password",
-            modifier = Modifier.padding(start=16.dp, top=16.dp),
+            modifier = Modifier.padding(top=16.dp),
             fontSize = 12.sp,
             lineHeight = 12.sp,
             fontWeight = FontWeight(600),
@@ -315,16 +385,9 @@ fun SignUpScreen(
 
         OutlinedTextField(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp),
+                .fillMaxWidth(),
             value = loginUiState?.confirmPasswordSignUp ?: "",
             onValueChange = {loginViewModel?.onConfirmPasswordChange(it)},
-//            leadingIcon = {
-//                Icon(
-//                    imageVector = Icons.Default.Person,
-//                    contentDescription = null,
-//                )
-//            },
             label = {
                 Text(
                     text = "Masukkan Password",
@@ -335,10 +398,87 @@ fun SignUpScreen(
             isError = isError
         )
 
-        Button(onClick = { loginViewModel?.createUser(context) },
+        Text(
+            text = "Unggah KTM*",
+            modifier = Modifier.padding( top=16.dp,bottom=12.dp),
+            fontSize = 12.sp,
+            lineHeight = 12.sp,
+            fontWeight = FontWeight(600),
+            color = Color(0xFF101828)
+        )
+
+        Column (modifier = Modifier.border(1.dp, Color.Gray, shape = RectangleShape)) {
+            imageUri?.let { uri ->
+                Image(
+
+                    painter = rememberImagePainter(uri),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(200.dp)
+                        .background(MaterialTheme.colorScheme.background)
+                        .align(Alignment.CenterHorizontally)
+                )
+            }
+            TextButton(onClick = { launchImage.launch("image/*") },
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
+                    .background(color = Color.White, shape = RectangleShape)) {
+
+                Column (modifier=Modifier.background(color= Color.White, shape = RectangleShape)){
+
+                    Icon(imageVector =Icons.Default.AddCircle,modifier = Modifier.fillMaxWidth(), contentDescription ="Tambah Foto",
+                    )
+                    Text(text = "Upload Gambar .jpeg",modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+                }
+            }
+        }
+
+
+//        Column(
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            modifier = Modifier.fillMaxWidth()
+//        ){
+//            Button(onClick = {
+//                isUploading.value = true
+//                bitmap.value.let {bitmap ->
+//                    uploadImageToFirebase(bitmap,context as ComponentActivity){success->
+//                        isUploading.value = false
+//                        if (success){
+//                            Toast.makeText(context,"Uploaded Successfully",Toast.LENGTH_SHORT).show()
+//                        }
+//                        else{
+//                            Toast.makeText(context,"Failed to Upload",Toast.LENGTH_SHORT).show()
+//                        }
+//                    }
+//                }
+//            },
+//                colors = ButtonDefaults.buttonColors()
+//            ) {
+//                Text(text = "Upload KTM")
+//            }
+//        }
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (isUploading.value){
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.White
+                )
+            }
+
+        }
+
+        Button(onClick = {
+//            loginViewModel?.createUser(context)
+            loginViewModel?.createUser(context as ComponentActivity)
+        },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 16.dp, top = 40.dp, bottom = 40.dp, end = 16.dp)
+                .padding(start = 16.dp, top = 40.dp, bottom = 25.dp, end = 16.dp)
                 .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 8.dp)),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
         ) {
@@ -356,9 +496,9 @@ fun SignUpScreen(
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
                 fontWeight = FontWeight(600),
-                color = Color(0xFF101828),)
-            Spacer(modifier=Modifier.size(8.dp))
-            TextButton(onClick = { onNavToLoginPage.invoke() }) {
+                color = Color(0xFF101828),
+                modifier = Modifier.padding(top=15.dp))
+            TextButton(onClick = { onNavToLoginPage.invoke()}) {
                 Text(text = "Login")
             }
         }
@@ -372,6 +512,19 @@ fun SignUpScreen(
                 onNavToHomePage.invoke()
             }
         }
+    }
+}
+
+fun uploadImageToFirebase(bitmap: Bitmap, context: Context, callback: (Boolean)->Unit) {
+    val storageRef = Firebase.storage.reference
+    val imageRef = storageRef.child("ktm/${bitmap}")
+    val baos = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos)
+    val imageData = baos.toByteArray()
+    imageRef.putBytes(imageData).addOnSuccessListener {
+        callback(true)
+    }.addOnFailureListener{
+        callback(false)
     }
 }
 

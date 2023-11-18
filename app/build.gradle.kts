@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+//    kotlin("kapt")
+//    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -78,4 +80,11 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.7.5")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
+    implementation("io.coil-kt:coil-compose:1.3.2")
+
+//    Hilt
+//    implementation("com.google.dagger:hilt-android:2.44")
+//    kapt("com.google.dagger:hilt-android-compiler:2.44")
 }
+
