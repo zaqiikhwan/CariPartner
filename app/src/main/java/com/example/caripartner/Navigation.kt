@@ -1,15 +1,14 @@
 package com.example.caripartner
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.caripartner.home.Home
-import com.example.caripartner.login.LoginScreen
-import com.example.caripartner.login.LoginViewModel
-import com.example.caripartner.login.SignUpScreen
+import com.example.caripartner.ui.screens.homeScreen.Home
+import com.example.caripartner.ui.screens.loginScreen.LoginScreen
+import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
+import com.example.caripartner.ui.screens.loginScreen.SignUpScreen
 
 enum class LoginRoutes{
     SignUp,
@@ -65,7 +64,7 @@ fun Navigation(
         }
 
         composable(route = HomeRoutes.Home.name){
-            Home()
+            Home(loginViewModel = loginViewModel)
         }
     }
 

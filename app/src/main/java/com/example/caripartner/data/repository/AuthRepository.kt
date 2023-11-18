@@ -1,4 +1,4 @@
-package com.example.caripartner.repository
+package com.example.caripartner.data.repository
 
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
