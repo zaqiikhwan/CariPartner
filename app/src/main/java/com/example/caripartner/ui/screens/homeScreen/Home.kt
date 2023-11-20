@@ -107,24 +107,16 @@ fun Home(loginViewModel: LoginViewModel?){
                 }
             }
             composable(BottomNavRoutes.Search.name) {
-                SearchScreen(
-                    navController
-                )
+                SearchScreen()
             }
             composable(BottomNavRoutes.Partner.name) {
-                PartnerScreen(
-                    navController
-                )
+                PartnerScreen()
             }
             composable(BottomNavRoutes.Chat.name) {
-                ChatScreen(
-                    navController
-                )
+                ChatScreen()
             }
             composable(BottomNavRoutes.Profile.name) {
-                ProfileScreen(
-                    navController
-                )
+                ProfileScreen()
             }
         }
     }

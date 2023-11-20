@@ -18,12 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.caripartner.R
 import com.example.caripartner.ui.theme.CariPartnerTheme
 
 @Composable
-fun SearchScreen(navController: NavController) {
+fun SearchScreen() {
     CariPartnerTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
