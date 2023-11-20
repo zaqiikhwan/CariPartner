@@ -17,13 +17,12 @@ enum class LoginRoutes{
 
 enum class HomeRoutes{
     Home,
-    Detail
 }
 
 @Composable
 fun Navigation(
     navController: NavHostController = rememberNavController(),
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
 ){
     NavHost(
         navController = navController,
@@ -66,6 +65,7 @@ fun Navigation(
         composable(route = HomeRoutes.Home.name){
             Home(loginViewModel = loginViewModel)
         }
+
     }
 
 }
