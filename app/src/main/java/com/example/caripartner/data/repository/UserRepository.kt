@@ -45,30 +45,4 @@ class UserRepository {
             }
         }
     }
-
-    fun getPartner(
-        desiredPreferences: MutableList<String>,
-        callback: (List<User>) -> Unit
-    ) {
-        val database = FirebaseDatabase.getInstance().reference.child("Users")
-
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val matchingUsers = snapshot.children.mapNotNull { userSnapshot ->
-                    val user = userSnapshot.getValue(User::class.java)
-                    val userPreferences = user?.preferences ?: emptyList()
-
-                    user?.takeIf {
-                        userPreferences.containsAll(desiredPreferences)
-                    }
-                }.take(20) // Ambil 20 pengguna pertama yang cocok dengan preferensi
-
-                callback(matchingUsers)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle error
-            }
-        })
-    }
 }
