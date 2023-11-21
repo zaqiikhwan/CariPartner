@@ -1,5 +1,7 @@
 package com.example.caripartner.ui.screens.profileScreen
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,7 +18,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Subtitles
 import androidx.compose.material3.Button
@@ -35,6 +36,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -44,17 +46,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.caripartner.LoginRoutes
 import com.example.caripartner.R
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+
+class PreferenceManager(context: Context) {
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+
+    fun getToggleState(): Boolean {
+        return sharedPreferences.getBoolean("toggle_state", false)
+    }
+
+    fun setToggleState(isChecked: Boolean) {
+        sharedPreferences.edit().putBoolean("toggle_state", isChecked).apply()
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreen() {
     val navController = rememberNavController()
-    val checkedState = remember {
-        mutableStateOf(false)
-    }
+    val context = LocalContext.current
+    val preferenceManager = remember(context) { PreferenceManager(context) }
+    val checkedState = remember { mutableStateOf(preferenceManager.getToggleState()) }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -230,7 +247,10 @@ fun ProfileScreen() {
 
                 Switch(
                     checked = checkedState.value,
-                    onCheckedChange = {checkedState.value = it},
+                    onCheckedChange = {
+                        checkedState.value = it
+                        preferenceManager.setToggleState(it)
+                                      },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = Color.White,
                         checkedTrackColor = Color(0xFF4B4EFC),
@@ -243,7 +263,6 @@ fun ProfileScreen() {
                 )
             }
         }
-        ClickablePersonal(Icons.Outlined.Person,"Biodata", "biodata", navController)
         ClickablePersonal(Icons.Outlined.StarOutline,"Bidang Dikuasai", "bidangDikuasai", navController)
         ClickablePersonal(Icons.Outlined.FavoriteBorder, "Keminatan", "keminatan", navController)
         ClickablePersonal(Icons.Outlined.Subtitles,"Penghargaan", "penghargaan", navController)
@@ -260,7 +279,10 @@ fun ProfileScreen() {
         )
 
         Button(
-            onClick = { Firebase.auth.signOut() },
+            onClick = {
+                Firebase.auth.signOut()
+                navController.navigate(LoginRoutes.SignIn.name)
+            },
             colors = ButtonDefaults.buttonColors(Color(0xFFF04438)),
             modifier = Modifier
                 .width(357.dp)
