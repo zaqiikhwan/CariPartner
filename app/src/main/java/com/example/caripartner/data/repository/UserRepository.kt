@@ -45,7 +45,6 @@ class UserRepository {
             }
         }
     }
-
     fun getPartner(
         desiredPreferences: MutableList<String>,
         callback: (List<User>) -> Unit
