@@ -27,5 +27,4 @@ fun CreateUser(email:String, name:String, isVerified:Boolean, ktm:String, passwo
             }
         }
     }
-
 }
