@@ -36,6 +36,7 @@ import com.example.caripartner.ui.screens.chatScreen.ChatScreen
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
 import com.example.caripartner.ui.screens.partnerScreen.PartnerScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileScreen
+import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
 import com.example.caripartner.ui.screens.searchScreen.SearchScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -50,7 +51,7 @@ enum class BottomNavRoutes{
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(loginViewModel: LoginViewModel?){
+fun Home(profileViewModel: ProfileViewModel?){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -90,7 +91,7 @@ fun Home(loginViewModel: LoginViewModel?){
             modifier = Modifier.padding(paddingValues = paddingValues)) {
             composable(BottomNavRoutes.Home.name){
 //                Home(loginViewModel = loginViewModel)
-                Text(text="This is home screen"+loginViewModel?.userId)
+//                Text(text="This is home screen"+loginViewModel?.userId)
 
                 Button(onClick = { Firebase.auth.signOut() },
                     modifier = Modifier
@@ -116,7 +117,7 @@ fun Home(loginViewModel: LoginViewModel?){
                 ChatScreen()
             }
             composable(BottomNavRoutes.Profile.name) {
-                ProfileScreen()
+                ProfileScreen(profileViewModel = profileViewModel)
             }
         }
     }
