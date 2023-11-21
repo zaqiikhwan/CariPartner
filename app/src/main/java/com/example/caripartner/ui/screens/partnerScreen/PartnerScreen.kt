@@ -1,11 +1,13 @@
 package com.example.caripartner.ui.screens.partnerScreen
 
+import android.media.Image
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,12 +24,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -37,7 +45,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -50,7 +60,16 @@ import com.example.caripartner.data.repository.UserRepository
 import com.example.caripartner.ui.theme.CariPartnerTheme
 
 @Composable
-fun PartnerScreen(userRepository: UserRepository, user: Int) {
+fun PartnerScreen() {
+    var showProdi by remember { mutableStateOf(false) }
+    val prodiOptions = listOf("Teknik Informatika", "Sistem Informasi", "Teknologi Informasi")
+
+    var showBidang by remember { mutableStateOf(false) }
+    val bidangOptions = listOf("Poster", "Debat", "Pidato", "UI/UX", "Infografik")
+
+    var showBersedia by remember { mutableStateOf(false) }
+    var bersediaOptions = listOf("Bersedia", "Tidak bersedia")
+
     CariPartnerTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -84,19 +103,19 @@ fun PartnerScreen(userRepository: UserRepository, user: Int) {
                 ) {
                     Row {
                         Text(
-                            text = "Rekomedasi partner lomba",
+                            text = "Rekomendasi partner lomba",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.White,
                             modifier = Modifier
-                                .padding(start = 12.dp, top = 16.dp, bottom = 16.dp)
+                                .padding(start = 10.dp, top = 16.dp, bottom = 16.dp)
                         )
                         Button(
                             onClick = { /*TODO*/ },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                             shape = RoundedCornerShape(8.dp),
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(top = 4.dp, bottom = 4.dp, start = 24.dp, end = 16.dp)
+                                .fillMaxWidth()
+                                .padding(top = 4.dp, bottom = 4.dp, start = 10.dp, end = 10.dp)
                         ) {
                             Text(
                                 text = "Coba Sekarang",
@@ -120,7 +139,7 @@ fun PartnerScreen(userRepository: UserRepository, user: Int) {
                         modifier = Modifier.padding(end = 4.dp)
                     )
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { showProdi = true },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                         modifier = Modifier
                             .padding(vertical = 0.dp, horizontal = 4.dp)
@@ -137,8 +156,10 @@ fun PartnerScreen(userRepository: UserRepository, user: Int) {
                             color = Color.Blue
                         )
                     }
+                    ProdiAlertDialogue(prodiOptions, showProdi) { showProdi = it }
+
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { showBidang = true },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                         modifier = Modifier
                             .padding(vertical = 0.dp, horizontal = 4.dp)
@@ -155,8 +176,10 @@ fun PartnerScreen(userRepository: UserRepository, user: Int) {
                             color = Color.Blue
                         )
                     }
+                    BidangAlertDialogue(bidangOptions, showBidang) { showBidang = it }
+
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = { showBersedia = true },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                         modifier = Modifier
                             .padding(vertical = 0.dp, horizontal = 4.dp)
@@ -168,12 +191,14 @@ fun PartnerScreen(userRepository: UserRepository, user: Int) {
                             .fillMaxHeight()
                     ) {
                         Text(
-                            text = "Bersedia",
+                            text = "Status",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Blue
                         )
                     }
                 }
+                BersediaAlertDialogue(bersediaOptions, showBersedia) { showBersedia = it }
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -190,7 +215,7 @@ fun PartnerScreen(userRepository: UserRepository, user: Int) {
                             .height(68.dp)
                             .background(
                                 MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(8.dp)
+                                shape = RoundedCornerShape(12.dp)
                             )
                     )
                     Column (
@@ -238,12 +263,12 @@ fun SearchBar(
 
     Box(
         modifier = Modifier
-            .size(width = 390.dp, height = 44.dp)
-            .padding(horizontal = 16.dp, vertical = 24.dp)
+            .size(width = 400.dp, height = 90.dp)
+            .padding(horizontal = 0.dp, vertical = 22.dp)
             .border(
                 width = 1.dp,
                 color = Color.Gray,
-                shape = RoundedCornerShape(6.dp)
+                shape = RoundedCornerShape(8.dp)
             )
     ) {
         BasicTextField(
@@ -258,7 +283,7 @@ fun SearchBar(
                 .width(358.dp)
                 .height(44.dp),
             decorationBox = { innerTextField ->
-                if(text.text.isEmpty()) {
+                if (text.text.isEmpty()) {
                     Text(
                         text = placeholder,
                         style = MaterialTheme.typography.bodyMedium,
@@ -281,6 +306,96 @@ fun SearchBar(
                         innerTextField()
                     }
                 )
+            }
+        )
+    }
+}
+
+@Composable
+fun ProdiAlertDialogue(prodiOptions: List<String>, showProdi: Boolean, setShowProdi: (Boolean) -> Unit) {
+    if (showProdi) {
+        AlertDialog(
+            onDismissRequest = { setShowProdi(false) },
+            title = { Text(text = "Pilih Program Studi") },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { setShowProdi(false) }) {
+                        Text("Tutup")
+                    }
+                }
+            },
+            text = {
+                Column {
+                    prodiOptions.forEach { prodiOption ->
+                        Text(
+                            text = prodiOption,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun BidangAlertDialogue(bidangOptions: List<String>, showBidang: Boolean, setShowBidang: (Boolean) -> Unit) {
+    if (showBidang) {
+        AlertDialog(
+            onDismissRequest = { setShowBidang(false) },
+            title = { Text(text = "Pilih Bidang") },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { setShowBidang(false) }) {
+                        Text("Tutup")
+                    }
+                }
+            },
+            text = {
+                Column {
+                    bidangOptions.forEach { bidangOption ->
+                        Text(
+                            text = bidangOption,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun BersediaAlertDialogue(bersediaOptions: List<String>, showBersedia: Boolean, setShowBersedia: (Boolean) -> Unit) {
+    if (showBersedia) {
+        AlertDialog(
+            onDismissRequest = { setShowBersedia(false) },
+            title = { Text(text = "Pilih Status") },
+            confirmButton = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    TextButton(onClick = { setShowBersedia(false) }) {
+                        Text("Tutup")
+                    }
+                }
+            },
+            text = {
+                Column {
+                    bersediaOptions.forEach { bersediaOption ->
+                        Text(
+                            text = bersediaOption,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                }
             }
         )
     }

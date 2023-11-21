@@ -10,6 +10,7 @@ import com.example.caripartner.ui.screens.loginScreen.LoginScreen
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
 import com.example.caripartner.ui.screens.loginScreen.SignUpScreen
 import com.example.caripartner.ui.screens.homeScreen.HomeViewModel
+import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
 
 enum class LoginRoutes{
     SignUp,
@@ -24,7 +25,8 @@ enum class HomeRoutes{
 fun Navigation(
     navController: NavHostController = rememberNavController(),
     loginViewModel: LoginViewModel,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    profileViewModel: ProfileViewModel
 ){
     NavHost(
         navController = navController,
@@ -65,7 +67,7 @@ fun Navigation(
         }
 
         composable(route = HomeRoutes.Home.name){
-            Home(homeViewModel = homeViewModel)
+            Home(loginViewModel = loginViewModel,homeViewModel = homeViewModel,profileViewModel = profileViewModel)
         }
 
     }

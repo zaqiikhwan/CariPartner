@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
 import com.example.caripartner.ui.screens.partnerScreen.PartnerScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileScreen
+import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
 import com.example.caripartner.ui.screens.searchScreen.SearchScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -50,7 +51,7 @@ enum class BottomNavRoutes{
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(homeViewModel: HomeViewModel?){
+fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profileViewModel: ProfileViewModel?){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -90,22 +91,19 @@ fun Home(homeViewModel: HomeViewModel?){
             modifier = Modifier.padding(paddingValues = paddingValues)) {
             composable(BottomNavRoutes.Home.name){
                 HomeScreen(homeViewModel=homeViewModel)
-//                Home(loginViewModel = loginViewModel)
-//                Text(text="This is home screen"+loginViewModel?.userId)
-//
-//                Button(onClick = { Firebase.auth.signOut() },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
-//                        .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
-//                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
-//                ) {
-//                    Text(text = "Logout",
-//                        fontSize = 18.sp,
-//                        lineHeight = 28.sp,
-//                        fontWeight = FontWeight(600),
-//                        color = Color(0xFFFFFFFF),)
-//                }
+                Button(onClick = { Firebase.auth.signOut() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
+                        .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
+                ) {
+                    Text(text = "Logout",
+                        fontSize = 18.sp,
+                        lineHeight = 28.sp,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFFFFFFFF),)
+                }
             }
             composable(BottomNavRoutes.Search.name) {
                 SearchScreen()
@@ -114,7 +112,7 @@ fun Home(homeViewModel: HomeViewModel?){
 //                PartnerScreen()
             }
             composable(BottomNavRoutes.Profile.name) {
-                ProfileScreen()
+                ProfileScreen(profileViewModel = profileViewModel)
             }
         }
     }

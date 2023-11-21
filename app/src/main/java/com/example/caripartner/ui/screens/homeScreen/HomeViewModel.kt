@@ -33,7 +33,7 @@ class HomeViewModel(
         }
     }
 
-    fun getAllUsersExceptCurrent(callback: (List<User>) -> Unit) {
-        UserRepository.getAllUsersExceptCurrent(callback)
-    }
+//    fun getAllUsersExceptCurrent(callback: (List<User>) -> Unit) {
+//        UserRepository.getAllUsersExceptCurrent(callback)
+//    }
 }

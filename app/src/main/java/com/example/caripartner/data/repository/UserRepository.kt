@@ -46,7 +46,6 @@ class UserRepository {
             }
         }
     }
-
     fun GetUserLogin(uid: String, callback:(User)-> Unit){
         database = FirebaseDatabase.getInstance().getReference("Users")
 
@@ -67,26 +66,45 @@ class UserRepository {
         })
     }
 
-    fun getAllUsersExceptCurrent(callback: (List<User>) -> Unit) {
-        // Assuming you have a way to get the current user's UID
-        val currentUserId = AuthRepository.getUserId()
+//    fun getAllUsersExceptCurrent(callback: (List<User>) -> Unit) {
+//        // Assuming you have a way to get the current user's UID
+//        val currentUserId = AuthRepository.getUserId()
+//
+//        database = FirebaseDatabase.getInstance().getReference("Users")
+//
+//        // Read all users from the database
+//        database.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//            val users = mutableListOf<User>()
+//
+//            for (userSnapshot in snapshot.children) {
+//                val user = userSnapshot.getValue(User::class.java)
+//                if (user != null) {
+//                    // Exclude the current user
+//                    users.add(user)
+//                }
+//            }
+//
+//            callback(users)
+//        }})
+    fun getPartner(
+        desiredPreferences: MutableList<String>,
+        callback: (List<User>) -> Unit
+    ) {
+        val database = FirebaseDatabase.getInstance().reference.child("Users")
 
-        database = FirebaseDatabase.getInstance().getReference("Users")
-
-        // Read all users from the database
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val users = mutableListOf<User>()
-
-                for (userSnapshot in snapshot.children) {
+                val matchingUsers = snapshot.children.mapNotNull { userSnapshot ->
                     val user = userSnapshot.getValue(User::class.java)
-                    if (user != null) {
-                        // Exclude the current user
-                        users.add(user)
-                    }
-                }
+                    val userPreferences = user?.preferences ?: emptyList()
 
-                callback(users)
+                    user?.takeIf {
+                        userPreferences.containsAll(desiredPreferences)
+                    }
+                }.take(20) // Ambil 20 pengguna pertama yang cocok dengan preferensi
+
+                callback(matchingUsers)
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -96,4 +114,5 @@ class UserRepository {
         })
     }
 
-}
+            }
+
