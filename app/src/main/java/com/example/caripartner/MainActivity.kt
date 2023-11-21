@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
+import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
 import com.example.caripartner.ui.theme.CariPartnerTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,13 +20,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val loginViewModel = viewModel(modelClass = LoginViewModel::class.java)
+            val recommendationViewModel = viewModel(modelClass = RecommendationViewModel::class.java)
             CariPartnerTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(loginViewModel = loginViewModel)
+                    Navigation(loginViewModel = loginViewModel, recommendationViewModel = recommendationViewModel)
                 }
             }
         }

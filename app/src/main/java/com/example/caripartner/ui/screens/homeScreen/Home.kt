@@ -25,7 +25,9 @@ fun Home(loginViewModel: LoginViewModel?){
 //    println(loginUiState)
     Text(text="This is home screen"+loginViewModel?.userId)
 
-    Button(onClick = { logout },
+    Button(onClick = {
+    val logout = Firebase.auth.signOut()
+    logout },
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
@@ -42,7 +44,7 @@ fun Home(loginViewModel: LoginViewModel?){
 
 // Obtain an instance of FirebaseAuth
 //val firebaseAuth = FirebaseAuth.getInstance()
-val logout = Firebase.auth.signOut()
+//val logout = Firebase.auth.signOut()
 
 
 
