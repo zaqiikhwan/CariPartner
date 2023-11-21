@@ -1,17 +1,35 @@
 package com.example.caripartner.data.repository
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import com.example.caripartner.data.model.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.core.UserData
+import kotlinx.coroutines.tasks.await
 
 class UserRepository {
-    private lateinit var database:DatabaseReference
+    private lateinit var database: DatabaseReference
+    private val auth = FirebaseAuth.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
-fun CreateUser(email:String, name:String, isVerified:Boolean, ktm:String, password:String, Uid:String, callback: (Boolean)->Unit){
+    fun CreateUser(
+        email: String,
+        name: String,
+        isVerified: Boolean,
+        ktm: String,
+        password: String,
+        Uid: String,
+        callback: (Boolean) -> Unit
+    ) {
         database = FirebaseDatabase.getInstance().getReference("Users")
 
-        val User = User(email, name, isVerified,ktm, password)
+        val User = User(email, name, isVerified, ktm, password)
 
 
         database.child(Uid).setValue(User).addOnCompleteListener { task ->
@@ -28,4 +46,29 @@ fun CreateUser(email:String, name:String, isVerified:Boolean, ktm:String, passwo
         }
     }
 
+    fun getPartner(
+        desiredPreferences: MutableList<String>,
+        callback: (List<User>) -> Unit
+    ) {
+        val database = FirebaseDatabase.getInstance().reference.child("Users")
+
+        database.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val matchingUsers = snapshot.children.mapNotNull { userSnapshot ->
+                    val user = userSnapshot.getValue(User::class.java)
+                    val userPreferences = user?.preferences ?: emptyList()
+
+                    user?.takeIf {
+                        userPreferences.containsAll(desiredPreferences)
+                    }
+                }.take(20) // Ambil 20 pengguna pertama yang cocok dengan preferensi
+
+                callback(matchingUsers)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
+    }
 }
