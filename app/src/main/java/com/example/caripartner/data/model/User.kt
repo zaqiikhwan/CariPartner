@@ -9,4 +9,9 @@ data class User(
     val major:String?=null,
     val field:String?=null,
     val isAvailable:Boolean?=null,
+    val bookmark: List<String>? = null,
+    val cancel: List<String>? = null,
+    val preferences: List<String>? = null
+    )
 )
+
