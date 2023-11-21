@@ -1,6 +1,11 @@
 package com.example.caripartner.ui.screens.recommendationScreen
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.remember
 import com.example.caripartner.data.model.User
 import com.example.caripartner.data.repository.AuthRepository
 import com.example.caripartner.data.repository.StorageRepository
@@ -21,6 +26,12 @@ class RecommendationViewModel(
         UserRepository.GetTargetUserIdByEmail("ikhwankiram10@gmail.com"){targetUserId ->
             print("++++++++++++++++++++++++++")
             println(targetUserId)
+        }
+    }
+
+    fun GetUserData( callback:(User)-> Unit){
+        UserRepository.GetUserLogin(AuthRepository.getUserId()){user ->
+            callback(user)
         }
     }
 

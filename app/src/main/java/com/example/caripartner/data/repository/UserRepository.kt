@@ -32,6 +32,26 @@ class UserRepository {
         }
     }
 
+    fun GetUserLogin(uid: String, callback:(User)-> Unit){
+        database = FirebaseDatabase.getInstance().getReference("Users")
+
+        // Get a reference to the user node in the database
+        val userRef = database.child(uid)
+
+        // Read data from the database
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userData = snapshot.getValue(User::class.java)
+                callback(userData!!)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+                Log.e("UserRepository", "Error reading from database: ${error.message}")
+            }
+        })
+    }
+
 
     fun GetUserPreferences(userId:String):MutableList<String>{
         database = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("preferences")

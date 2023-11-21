@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.NavigateNext
 import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -108,7 +110,16 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
 //        }
     }
     print("-------Hey--------")
-    println(profiles)
+    var userData: User by remember { mutableStateOf(User()) }
+
+    recommendationViewModel?.GetUserData(){user ->
+        if (user != null) {
+            userData = user
+        }
+    }
+
+    var selectedUser by remember { mutableStateOf<String?>(null) }
+
     SwipeableCardTheme {
         Box(
             modifier = Modifier
@@ -136,6 +147,8 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
                         )
                     )
                 }
+                
+                Text(text = userData.name?: "Default Name")
                 val states = profiles.reversed()
                     .map { it to rememberSwipeableCardState() }
                 var hint by remember {
@@ -196,6 +209,7 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
                                     }?.second
                                 last?.swipe(Direction.Left)
                             }
+
                         },
                         icon = Icons.Rounded.ArrowForward
                     )
@@ -356,5 +370,26 @@ fun Scrim(modifier: Modifier = Modifier) {
 fun PrevRecommendationScreen(){
     CariPartnerTheme {
         Recommendation()
+    }
+}
+
+
+@Composable
+fun UserDetailScreen(userId: String, onNavigateUp: () -> Unit) {
+    // Tampilkan detail user
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Detail User: $userId")
+
+        // Tambahkan opsi untuk kembali ke halaman daftar user
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onNavigateUp) {
+            Text("Back to User List")
+        }
     }
 }
