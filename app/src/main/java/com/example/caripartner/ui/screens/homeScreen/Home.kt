@@ -1,5 +1,6 @@
 package com.example.caripartner.ui.screens.homeScreen
 
+import HomeScreen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -40,14 +41,40 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.caripartner.HomeRoutes
 import com.example.caripartner.LoginRoutes
-import com.example.caripartner.ui.screens.chatScreen.ChatScreen
 import com.example.caripartner.ui.screens.loginScreen.LoginScreen
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
-import com.example.caripartner.ui.screens.partnerScreen.PartnerScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileScreen
+import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
 import com.example.caripartner.ui.screens.searchScreen.SearchScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+
+//fun Home(loginViewModel: LoginViewModel?){
+//    val loginUiState = loginViewModel?.loginUiState
+////    println(loginUiState)
+//    Text(text="This is home screen"+loginViewModel?.userId)
+//
+//    Button(onClick = {
+//    val logout = Firebase.auth.signOut()
+//    logout },
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
+//            .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
+//        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
+//    ) {
+//        Text(text = "Logout",
+//            fontSize = 18.sp,
+//            lineHeight = 28.sp,
+//            fontWeight = FontWeight(600),
+//            color = Color(0xFFFFFFFF),)
+//    }
+//}
+
+// Obtain an instance of FirebaseAuth
+//val firebaseAuth = FirebaseAuth.getInstance()
+//val logout = Firebase.auth.signOut()
+
 
 enum class BottomNavRoutes{
     Home,
@@ -59,7 +86,7 @@ enum class BottomNavRoutes{
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(loginViewModel: LoginViewModel?){
+fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profileViewModel: ProfileViewModel?){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -141,18 +168,29 @@ fun Home(loginViewModel: LoginViewModel?){
 //                        fontWeight = FontWeight(600),
 //                        color = Color(0xFFFFFFFF),)
 //                }
+                HomeScreen(homeViewModel=homeViewModel)
+                Button(onClick = { Firebase.auth.signOut() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
+                        .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
+                ) {
+                    Text(text = "Logout",
+                        fontSize = 18.sp,
+                        lineHeight = 28.sp,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFFFFFFFF),)
+                }
             }
             composable(BottomNavRoutes.Search.name) {
                 SearchScreen()
             }
             composable(BottomNavRoutes.Partner.name) {
-                PartnerScreen()
-            }
-            composable(BottomNavRoutes.Chat.name) {
-                ChatScreen()
+//                PartnerScreen()
             }
             composable(BottomNavRoutes.Profile.name) {
-                ProfileScreen()
+                ProfileScreen(profileViewModel = profileViewModel)
             }
         }
     }
@@ -194,9 +232,3 @@ data class BottomNavigationItem(
         )
     }
 }
-
-
-
-
-
-

@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material.icons.outlined.Subtitles
 import androidx.compose.material3.Button
@@ -31,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -54,6 +56,8 @@ import com.example.caripartner.HomeRoutes
 import com.example.caripartner.LoginRoutes
 import com.example.caripartner.R
 import com.example.caripartner.ui.screens.homeScreen.BottomNavRoutes
+import com.example.caripartner.data.model.User
+import com.example.caripartner.ui.screens.loginScreen.LoginScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -72,11 +76,16 @@ class PreferenceManager(context: Context) {
 
 @Preview(showBackground = true)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(profileViewModel: ProfileViewModel?=null) {
     val navController = rememberNavController()
     val context = LocalContext.current
     val preferenceManager = remember(context) { PreferenceManager(context) }
     val checkedState = remember { mutableStateOf(preferenceManager.getToggleState()) }
+    var profiles: User by remember { mutableStateOf(User()) }
+    profileViewModel?.GetUserData(){user ->
+        profiles = user
+    }
+
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -150,7 +159,7 @@ fun ProfileScreen() {
                         verticalArrangement = Arrangement.Center
                     ) {
                         Text(
-                            text = "Muh Zaqi",
+                            text = profiles.name?:"",
                             fontSize = 14.sp,
                             lineHeight = 18.sp,
                             fontWeight = FontWeight(600),
@@ -269,9 +278,8 @@ fun ProfileScreen() {
                 )
             }
         }
+        ClickablePersonal(Icons.Outlined.Person,"Biodata", "biodata", navController)
         ClickablePersonal(Icons.Outlined.StarOutline,"Bidang Dikuasai", "bidangDikuasai", navController)
-        ClickablePersonal(Icons.Outlined.FavoriteBorder, "Keminatan", "keminatan", navController)
-        ClickablePersonal(Icons.Outlined.Subtitles,"Penghargaan", "penghargaan", navController)
 
         Text(
             text = "Pengaturan",
@@ -293,6 +301,12 @@ fun ProfileScreen() {
                         }
                     }
                 }
+//                Firebase.auth.signOut()
+//                navController.navigate(LoginRoutes.SignIn.name){
+//                    popUpTo(LoginRoutes.SignIn.name) {
+//                        inclusive = true
+//                    }
+//                }
             },
             colors = ButtonDefaults.buttonColors(Color(0xFFF04438)),
             modifier = Modifier

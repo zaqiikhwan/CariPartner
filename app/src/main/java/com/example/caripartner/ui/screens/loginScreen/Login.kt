@@ -614,7 +614,7 @@ fun uploadImageToFirebase(bitmap: Bitmap, context: Context, callback: (Boolean)-
 fun PrevLoginScreen(){
     CariPartnerTheme {
         LoginScreen(onNavToHomePage = { /*TODO*/ }) {
-            
+
         }
     }
 }
@@ -625,7 +625,7 @@ fun PrevLoginScreen(){
 fun PrevSignUpScreen(){
     CariPartnerTheme {
         SignUpScreen(onNavToHomePage = { /*TODO*/ }) {
-            
+
         }
     }
 }
