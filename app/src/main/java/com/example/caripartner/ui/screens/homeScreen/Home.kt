@@ -41,6 +41,33 @@ import com.example.caripartner.ui.screens.searchScreen.SearchScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
+fun Home(loginViewModel: LoginViewModel?){
+    val loginUiState = loginViewModel?.loginUiState
+//    println(loginUiState)
+    Text(text="This is home screen"+loginViewModel?.userId)
+
+    Button(onClick = {
+    val logout = Firebase.auth.signOut()
+    logout },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
+            .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
+    ) {
+        Text(text = "Logout",
+            fontSize = 18.sp,
+            lineHeight = 28.sp,
+            fontWeight = FontWeight(600),
+            color = Color(0xFFFFFFFF),)
+    }
+}
+
+// Obtain an instance of FirebaseAuth
+//val firebaseAuth = FirebaseAuth.getInstance()
+//val logout = Firebase.auth.signOut()
+
+
 enum class BottomNavRoutes{
     Home,
     Search,

@@ -68,3 +68,13 @@ fun CariPartnerTheme(
         content = content
     )
 }
+
+@Composable
+fun SwipeableCardTheme(
+    content: @Composable () -> Unit,
+) {
+    MaterialTheme(
+        typography = Typography,
+        content = content
+    )
+}

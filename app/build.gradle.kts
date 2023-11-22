@@ -90,5 +90,11 @@ dependencies {
 //    Hilt
 //    implementation("com.google.dagger:hilt-android:2.44")
 //    kapt("com.google.dagger:hilt-android-compiler:2.44")
+
+
+    implementation("com.alexstyl.swipeablecard:swipeablecard:0.1.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0")
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
 }
 

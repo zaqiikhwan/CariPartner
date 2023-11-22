@@ -13,4 +13,3 @@ data class User(
     val cancel: List<String>? = null,
     val preferences: List<String>? = null
 )
-
