@@ -28,6 +28,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,9 +46,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.caripartner.HomeRoutes
 import com.example.caripartner.LoginRoutes
 import com.example.caripartner.R
+import com.example.caripartner.ui.screens.homeScreen.BottomNavRoutes
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -277,11 +283,16 @@ fun ProfileScreen() {
                 .align(Alignment.Start)
                 .padding(start = 20.dp, top = 16.dp, bottom = 16.dp)
         )
-
         Button(
             onClick = {
-                Firebase.auth.signOut()
-                navController.navigate(LoginRoutes.SignIn.name)
+                navController.currentDestination
+                Firebase.auth.signOut().also {
+                    navController.navigate(LoginRoutes.SignIn.name) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            inclusive = true
+                        }
+                    }
+                }
             },
             colors = ButtonDefaults.buttonColors(Color(0xFFF04438)),
             modifier = Modifier

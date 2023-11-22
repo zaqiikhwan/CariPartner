@@ -1,14 +1,19 @@
 package com.example.caripartner.ui.screens.homeScreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -21,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -32,7 +38,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.caripartner.HomeRoutes
+import com.example.caripartner.LoginRoutes
 import com.example.caripartner.ui.screens.chatScreen.ChatScreen
+import com.example.caripartner.ui.screens.loginScreen.LoginScreen
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
 import com.example.caripartner.ui.screens.partnerScreen.PartnerScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileScreen
@@ -88,23 +97,50 @@ fun Home(loginViewModel: LoginViewModel?){
             navController = navController,
             startDestination = BottomNavRoutes.Home.name,
             modifier = Modifier.padding(paddingValues = paddingValues)) {
+            composable(route = LoginRoutes.SignIn.name){
+                LoginScreen(onNavToHomePage = {
+                    navController.navigate(HomeRoutes.Home.name){
+                        launchSingleTop = true
+                        popUpTo(route = LoginRoutes.SignIn.name){
+                            inclusive = true
+                        }
+                    }
+                },
+                    loginViewModel = loginViewModel
+
+                ) {
+                    navController.navigate(LoginRoutes.SignUp.name){
+                        launchSingleTop = true
+                        popUpTo(LoginRoutes.SignIn.name){
+                            inclusive = true
+                        }
+                    }
+                }
+            }
             composable(BottomNavRoutes.Home.name){
 //                Home(loginViewModel = loginViewModel)
                 Text(text="This is home screen"+loginViewModel?.userId)
 
-                Button(onClick = { Firebase.auth.signOut() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
-                        .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
-                ) {
-                    Text(text = "Logout",
-                        fontSize = 18.sp,
-                        lineHeight = 28.sp,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFFFFFFFF),)
-                }
+//                Button(
+//                    onClick = { Firebase.auth.signOut().also {
+//                        navController.navigate(LoginRoutes.SignIn.name) {
+//                            popUpTo(navController.graph.findStartDestination().id) {
+//                                inclusive = true
+//                            }
+//                        }
+//                    } },
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
+//                        .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
+//                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
+//                ) {
+//                    Text(text = "Logout",
+//                        fontSize = 18.sp,
+//                        lineHeight = 28.sp,
+//                        fontWeight = FontWeight(600),
+//                        color = Color(0xFFFFFFFF),)
+//                }
             }
             composable(BottomNavRoutes.Search.name) {
                 SearchScreen()

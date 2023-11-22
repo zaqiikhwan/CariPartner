@@ -50,7 +50,7 @@ import com.example.caripartner.data.repository.UserRepository
 import com.example.caripartner.ui.theme.CariPartnerTheme
 
 @Composable
-fun PartnerScreen(userRepository: UserRepository, user: Int) {
+fun PartnerScreen() {
     CariPartnerTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
@@ -59,7 +59,7 @@ fun PartnerScreen(userRepository: UserRepository, user: Int) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 24.dp),
+                    .padding(horizontal = 16.dp, vertical = 22.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -69,7 +69,7 @@ fun PartnerScreen(userRepository: UserRepository, user: Int) {
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
                 SearchBar(
-                    onSearchTextChanged = { searchText ->
+                    onSearchTextChanged = { _ ->
                         // Lakukan sesuatu dengan nilai searchText (misalnya, filter data berdasarkan pencarian)
                     },
                     placeholder = "Ketik untuk mencari partner"
@@ -238,12 +238,12 @@ fun SearchBar(
 
     Box(
         modifier = Modifier
-            .size(width = 390.dp, height = 44.dp)
-            .padding(horizontal = 16.dp, vertical = 24.dp)
+            .size(width = 400.dp, height = 90.dp)
+            .padding(horizontal = 0.dp, vertical = 22.dp)
             .border(
                 width = 1.dp,
                 color = Color.Gray,
-                shape = RoundedCornerShape(6.dp)
+                shape = RoundedCornerShape(8.dp)
             )
     ) {
         BasicTextField(
