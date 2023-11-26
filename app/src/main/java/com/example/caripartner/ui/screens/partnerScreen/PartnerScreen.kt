@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.caripartner.R
 import com.example.caripartner.ui.theme.CariPartnerTheme
 
@@ -64,7 +65,7 @@ fun PartnerScreen() {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 22.dp),
+                    .padding(horizontal = 16.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -101,7 +102,7 @@ fun PartnerScreen() {
                             shape = RoundedCornerShape(8.dp),
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 4.dp, bottom = 4.dp, start = 10.dp, end = 10.dp)
+                                .padding(top = 4.dp, bottom = 4.dp, start = 8.dp, end = 8.dp)
                         ) {
                             Text(
                                 text = "Coba Sekarang",

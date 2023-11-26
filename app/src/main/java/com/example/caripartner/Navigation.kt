@@ -9,10 +9,10 @@ import com.example.caripartner.ui.screens.homeScreen.Home
 import com.example.caripartner.ui.screens.loginScreen.LoginScreen
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
 import com.example.caripartner.ui.screens.loginScreen.SignUpScreen
-import com.example.caripartner.ui.screens.recommendationScreen.Recommendation
-import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
+//import com.example.caripartner.ui.screens.recommendationScreen.Recommendation
 import com.example.caripartner.ui.screens.homeScreen.HomeViewModel
 import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
+//import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
 
 enum class LoginRoutes{
     SignUp,
@@ -27,9 +27,9 @@ enum class HomeRoutes{
 fun Navigation(
     navController: NavHostController = rememberNavController(),
     loginViewModel: LoginViewModel,
-    recommendationViewModel : RecommendationViewModel
     homeViewModel: HomeViewModel,
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+//    recommendationViewModel: RecommendationViewModel
 ){
     NavHost(
         navController = navController,
@@ -71,7 +71,7 @@ fun Navigation(
 
         composable(route = HomeRoutes.Home.name){
 //            Home(loginViewModel = loginViewModel)
-            Recommendation(recommendationViewModel = recommendationViewModel)
+//            Recommendation(recommendationViewModel = recommendationViewModel)
             Home(loginViewModel = loginViewModel,homeViewModel = homeViewModel,profileViewModel = profileViewModel)
         }
 

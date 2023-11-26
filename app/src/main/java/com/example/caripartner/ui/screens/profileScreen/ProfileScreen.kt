@@ -74,10 +74,9 @@ class PreferenceManager(context: Context) {
     }
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun ProfileScreen(profileViewModel: ProfileViewModel?=null) {
-    val navController = rememberNavController()
+fun ProfileScreen(profileViewModel: ProfileViewModel?=null, navController: NavController) {
     val context = LocalContext.current
     val preferenceManager = remember(context) { PreferenceManager(context) }
     val checkedState = remember { mutableStateOf(preferenceManager.getToggleState()) }
@@ -293,7 +292,6 @@ fun ProfileScreen(profileViewModel: ProfileViewModel?=null) {
         )
         Button(
             onClick = {
-                navController.currentDestination
                 Firebase.auth.signOut().also {
                     navController.navigate(LoginRoutes.SignIn.name) {
                         popUpTo(navController.graph.findStartDestination().id) {
@@ -301,12 +299,6 @@ fun ProfileScreen(profileViewModel: ProfileViewModel?=null) {
                         }
                     }
                 }
-//                Firebase.auth.signOut()
-//                navController.navigate(LoginRoutes.SignIn.name){
-//                    popUpTo(LoginRoutes.SignIn.name) {
-//                        inclusive = true
-//                    }
-//                }
             },
             colors = ButtonDefaults.buttonColors(Color(0xFFF04438)),
             modifier = Modifier

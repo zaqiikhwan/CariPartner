@@ -43,6 +43,7 @@ import com.example.caripartner.HomeRoutes
 import com.example.caripartner.LoginRoutes
 import com.example.caripartner.ui.screens.loginScreen.LoginScreen
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
+import com.example.caripartner.ui.screens.partnerScreen.PartnerScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
 import com.example.caripartner.ui.screens.searchScreen.SearchScreen
@@ -93,29 +94,31 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar {
-                BottomNavigationItem().bottomNavigationItems().forEachIndexed { _, navigationItem ->
-                    NavigationBarItem(
-                        selected = navigationItem.route == currentDestination?.route,
-                        label = {
-                            Text(navigationItem.label)
-                        },
-                        icon = {
-                            Icon(
-                                navigationItem.icon,
-                                contentDescription = navigationItem.label
-                            )
-                        },
-                        onClick = {
-                            navController.navigate(navigationItem.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+            if (currentDestination?.route != LoginRoutes.SignIn.name) {
+                NavigationBar {
+                    BottomNavigationItem().bottomNavigationItems().forEachIndexed { _, navigationItem ->
+                        NavigationBarItem(
+                            selected = navigationItem.route == currentDestination?.route,
+                            label = {
+                                Text(navigationItem.label)
+                            },
+                            icon = {
+                                Icon(
+                                    navigationItem.icon,
+                                    contentDescription = navigationItem.label
+                                )
+                            },
+                            onClick = {
+                                navController.navigate(navigationItem.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
@@ -123,8 +126,10 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
         NavHost(
             navController = navController,
             startDestination = BottomNavRoutes.Home.name,
-            modifier = Modifier.padding(paddingValues = paddingValues)) {
+            modifier = Modifier.padding(paddingValues = paddingValues))
+        {
             composable(route = LoginRoutes.SignIn.name){
+
                 LoginScreen(onNavToHomePage = {
                     navController.navigate(HomeRoutes.Home.name){
                         launchSingleTop = true
@@ -145,52 +150,16 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
                 }
             }
             composable(BottomNavRoutes.Home.name){
-//                Home(loginViewModel = loginViewModel)
-                Text(text="This is home screen"+loginViewModel?.userId)
-
-//                Button(
-//                    onClick = { Firebase.auth.signOut().also {
-//                        navController.navigate(LoginRoutes.SignIn.name) {
-//                            popUpTo(navController.graph.findStartDestination().id) {
-//                                inclusive = true
-//                            }
-//                        }
-//                    } },
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
-//                        .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
-//                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
-//                ) {
-//                    Text(text = "Logout",
-//                        fontSize = 18.sp,
-//                        lineHeight = 28.sp,
-//                        fontWeight = FontWeight(600),
-//                        color = Color(0xFFFFFFFF),)
-//                }
                 HomeScreen(homeViewModel=homeViewModel)
-                Button(onClick = { Firebase.auth.signOut() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
-                        .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
-                ) {
-                    Text(text = "Logout",
-                        fontSize = 18.sp,
-                        lineHeight = 28.sp,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFFFFFFFF),)
-                }
             }
             composable(BottomNavRoutes.Search.name) {
                 SearchScreen()
             }
             composable(BottomNavRoutes.Partner.name) {
-//                PartnerScreen()
+                PartnerScreen()
             }
             composable(BottomNavRoutes.Profile.name) {
-                ProfileScreen(profileViewModel = profileViewModel)
+                ProfileScreen(profileViewModel = profileViewModel, navController)
             }
         }
     }
@@ -219,11 +188,11 @@ data class BottomNavigationItem(
                 icon = Icons.Filled.AddCircle,
                 route = BottomNavRoutes.Partner.name
             ),
-            BottomNavigationItem(
-                label = "Pesan",
-                icon = Icons.Filled.MailOutline,
-                route = BottomNavRoutes.Chat.name
-            ),
+//            BottomNavigationItem(
+//                label = "Pesan",
+//                icon = Icons.Filled.MailOutline,
+//                route = BottomNavRoutes.Chat.name
+//            ),
             BottomNavigationItem(
                 label = "Profile",
                 icon = Icons.Filled.AccountCircle,

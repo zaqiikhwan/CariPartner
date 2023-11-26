@@ -61,6 +61,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavDestinationDsl
+import androidx.navigation.NavHost
 import coil.compose.rememberImagePainter
 import com.example.caripartner.R
 import com.example.caripartner.ui.theme.CariPartnerTheme

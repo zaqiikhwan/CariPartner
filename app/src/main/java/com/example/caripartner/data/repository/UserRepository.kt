@@ -1,7 +1,6 @@
 package com.example.caripartner.data.repository
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import com.example.caripartner.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -10,10 +9,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.core.UserData
-import kotlinx.coroutines.tasks.await
 
 class UserRepository {
     private lateinit var database: DatabaseReference
@@ -119,7 +115,7 @@ class UserRepository {
             }
 
     fun GetUserLogin(uid: String, callback:(User)-> Unit){
-        database = FirebaseDatabase.getInstance().getReference("Users")
+        var database = FirebaseDatabase.getInstance().getReference("Users")
 
         // Get a reference to the user node in the database
         val userRef = database.child(uid)
@@ -140,7 +136,8 @@ class UserRepository {
 
 
     fun GetUserPreferences(userId:String):MutableList<String>{
-        database = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("preferences")
+        var database = FirebaseDatabase.getInstance().reference.child("Users").child(userId)
+            .child("preferences")
 
         var preferences:MutableList<String> = mutableListOf ()
         database.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -165,7 +162,7 @@ class UserRepository {
 
 
     fun GetUserRecommendation(desiredPreferences:MutableList<String>,Uid: String, callback: (List<User>) -> Unit) {
-        database = FirebaseDatabase.getInstance().reference.child("Users")
+        var database = FirebaseDatabase.getInstance().reference.child("Users")
 
         var matchingUsers: List<User> = mutableListOf()
 
@@ -177,8 +174,8 @@ class UserRepository {
 
                 val filteredUsers = snapshot.children
                     .filter { it.key != currentUser &&
-                            !currentUserData!!.bookmark.contains(it.key) &&
-                            !currentUserData!!.bookmark.contains(it.key)
+                            !currentUserData!!.bookmark?.contains(it.key)!! &&
+                            !currentUserData.bookmark?.contains(it.key)!!
                     } // Hindari user saat ini
                     .filter {
                         val user = it.getValue(User::class.java)
@@ -229,7 +226,6 @@ class UserRepository {
         })
     }
 
-    fun BookmarkUser(){
+fun BookmarkUser(){
 
-    }
 }
