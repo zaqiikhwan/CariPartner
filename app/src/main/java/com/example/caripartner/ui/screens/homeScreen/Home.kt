@@ -153,8 +153,6 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
             }
             composable(BottomNavRoutes.Home.name){
                 HomeScreen(homeViewModel=homeViewModel)
-<<<<<<< HEAD
-=======
                 Button(onClick = { Firebase.auth.signOut() },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -171,18 +169,13 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
                         fontWeight = FontWeight(600),
                         color = Color(0xFFFFFFFF),)
                 }
->>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
             }
             composable(BottomNavRoutes.Search.name) {
                 SearchScreen()
             }
             composable(BottomNavRoutes.Partner.name) {
-<<<<<<< HEAD
-                PartnerScreen()
-=======
 //                PartnerScreen()
                 Recommendation(recommendationViewModel = recommendationViewModel)
->>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
             }
             composable(BottomNavRoutes.Profile.name) {
                 ProfileScreen(profileViewModel = profileViewModel, navController)
