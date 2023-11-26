@@ -111,13 +111,8 @@ class UserRepository {
     }
 
 
-<<<<<<< HEAD
-    fun GetUserLogin(uid: String, callback:(User)-> Unit){
-        var database = FirebaseDatabase.getInstance().getReference("Users")
-=======
     fun GetUserLogin(uid: String, callback: (User) -> Unit) {
         database = FirebaseDatabase.getInstance().getReference("Users")
->>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
 
         // Get a reference to the user node in the database
         val userRef = database.child(uid)
@@ -137,13 +132,8 @@ class UserRepository {
     }
 
 
-<<<<<<< HEAD
-    fun GetUserPreferences(userId:String):MutableList<String>{
-        var database = FirebaseDatabase.getInstance().reference.child("Users").child(userId)
-=======
     fun GetUserPreferences(userId: String): MutableList<String> {
         database = FirebaseDatabase.getInstance().reference.child("Users").child(userId)
->>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
             .child("preferences")
 
         var preferences: MutableList<String> = mutableListOf()
@@ -169,17 +159,12 @@ class UserRepository {
     }
 
 
-<<<<<<< HEAD
-    fun GetUserRecommendation(desiredPreferences:MutableList<String>,Uid: String, callback: (List<User>) -> Unit) {
-        var database = FirebaseDatabase.getInstance().reference.child("Users")
-=======
     fun GetUserRecommendation(
         desiredPreferences: MutableList<String>,
         Uid: String,
         callback: (List<User>) -> Unit
     ) {
         database = FirebaseDatabase.getInstance().reference.child("Users")
->>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
 
         var matchingUsers: List<User> = mutableListOf()
 
@@ -190,16 +175,10 @@ class UserRepository {
                 val currentUserData = snapshot.child(currentUser).getValue(User::class.java)
 
                 val filteredUsers = snapshot.children
-<<<<<<< HEAD
-                    .filter { it.key != currentUser &&
-                            !currentUserData!!.bookmark?.contains(it.key)!! &&
-                            !currentUserData.bookmark?.contains(it.key)!!
-=======
                     .filter {
                         it.key != currentUser &&
                                 !currentUserData!!.bookmark.contains(it.key) &&
                                 !currentUserData!!.bookmark.contains(it.key)
->>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
                     } // Hindari user saat ini
                     .filter {
                         val user = it.getValue(User::class.java)
@@ -252,12 +231,7 @@ class UserRepository {
         })
     }
 
-<<<<<<< HEAD
-fun BookmarkUser(){
-
-=======
     fun BookmarkUser() {
 
     }
->>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
 }
