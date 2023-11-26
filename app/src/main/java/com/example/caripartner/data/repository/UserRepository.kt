@@ -10,16 +10,12 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.core.UserData
 import kotlinx.coroutines.tasks.await
 
 class UserRepository {
     private lateinit var database: DatabaseReference
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
-    private val AuthRepository: AuthRepository = AuthRepository()
 
     fun CreateUser(
         email: String,
@@ -48,27 +44,28 @@ class UserRepository {
             }
         }
     }
-    fun GetUserLogin(uid: String, callback:(User)-> Unit){
-        database = FirebaseDatabase.getInstance().getReference("Users")
 
-        // Get a reference to the user node in the database
-        val userRef = database.child(uid)
+//    fun GetUserLogin(uid: String, callback: (User) -> Unit) {
+//        database = FirebaseDatabase.getInstance().getReference("Users")
+//
+//        // Get a reference to the user node in the database
+//        val userRef = database.child(uid)
+//
+//        // Read data from the database
+//        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val userData = snapshot.getValue(User::class.java)
+//                callback(userData!!)
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                // Handle error
+//                Log.e("UserRepository", "Error reading from database: ${error.message}")
+//            }
+//        })
+//    }
 
-        // Read data from the database
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val userData = snapshot.getValue(User::class.java)
-                callback(userData!!)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle error
-                Log.e("UserRepository", "Error reading from database: ${error.message}")
-            }
-        })
-    }
-
-//    fun getAllUsersExceptCurrent(callback: (List<User>) -> Unit) {
+    //    fun getAllUsersExceptCurrent(callback: (List<User>) -> Unit) {
 //        // Assuming you have a way to get the current user's UID
 //        val currentUserId = AuthRepository.getUserId()
 //
@@ -116,9 +113,8 @@ class UserRepository {
         })
     }
 
-            }
 
-    fun GetUserLogin(uid: String, callback:(User)-> Unit){
+    fun GetUserLogin(uid: String, callback: (User) -> Unit) {
         database = FirebaseDatabase.getInstance().getReference("Users")
 
         // Get a reference to the user node in the database
@@ -139,13 +135,15 @@ class UserRepository {
     }
 
 
-    fun GetUserPreferences(userId:String):MutableList<String>{
-        database = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("preferences")
+    fun GetUserPreferences(userId: String): MutableList<String> {
+        database = FirebaseDatabase.getInstance().reference.child("Users").child(userId)
+            .child("preferences")
 
-        var preferences:MutableList<String> = mutableListOf ()
+        var preferences: MutableList<String> = mutableListOf()
         database.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot){
-                val userPreferences = snapshot.getValue(object : GenericTypeIndicator<ArrayList<String>>() {})
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userPreferences =
+                    snapshot.getValue(object : GenericTypeIndicator<ArrayList<String>>() {})
                 // Lakukan sesuatu dengan daftar preferensi pengguna
                 if (userPreferences != null) {
                     for ((index, preference) in userPreferences.withIndex()) {
@@ -164,7 +162,11 @@ class UserRepository {
     }
 
 
-    fun GetUserRecommendation(desiredPreferences:MutableList<String>,Uid: String, callback: (List<User>) -> Unit) {
+    fun GetUserRecommendation(
+        desiredPreferences: MutableList<String>,
+        Uid: String,
+        callback: (List<User>) -> Unit
+    ) {
         database = FirebaseDatabase.getInstance().reference.child("Users")
 
         var matchingUsers: List<User> = mutableListOf()
@@ -176,24 +178,27 @@ class UserRepository {
                 val currentUserData = snapshot.child(currentUser).getValue(User::class.java)
 
                 val filteredUsers = snapshot.children
-                    .filter { it.key != currentUser &&
-                            !currentUserData!!.bookmark.contains(it.key) &&
-                            !currentUserData!!.bookmark.contains(it.key)
+                    .filter {
+                        it.key != currentUser &&
+                                !currentUserData!!.bookmark.contains(it.key) &&
+                                !currentUserData!!.bookmark.contains(it.key)
                     } // Hindari user saat ini
                     .filter {
                         val user = it.getValue(User::class.java)
-                        val preferences = user?.preferences?: emptyList()
+                        val preferences = user?.preferences ?: emptyList()
 
                         // Lakukan filter berdasarkan preferensi dan hindari user yang terdaftar di bookmark atau cancel
                         user != null &&
-                                preferences.containsAll(currentUserData?.preferences?: emptyList() ?: emptyList())
+                                preferences.containsAll(
+                                    currentUserData?.preferences ?: emptyList() ?: emptyList()
+                                )
                     }
                     .mapNotNull { it.getValue(User::class.java) }
                     .take(20)
 
 
                 // Lakukan sesuatu dengan daftar filteredUsers
-                matchingUsers=filteredUsers
+                matchingUsers = filteredUsers
 
                 callback(filteredUsers)
             }
@@ -229,7 +234,7 @@ class UserRepository {
         })
     }
 
-    fun BookmarkUser(){
+    fun BookmarkUser() {
 
     }
 }

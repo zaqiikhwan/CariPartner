@@ -27,7 +27,7 @@ enum class HomeRoutes{
 fun Navigation(
     navController: NavHostController = rememberNavController(),
     loginViewModel: LoginViewModel,
-    recommendationViewModel : RecommendationViewModel
+    recommendationViewModel : RecommendationViewModel,
     homeViewModel: HomeViewModel,
     profileViewModel: ProfileViewModel
 ){
@@ -72,7 +72,7 @@ fun Navigation(
         composable(route = HomeRoutes.Home.name){
 //            Home(loginViewModel = loginViewModel)
             Recommendation(recommendationViewModel = recommendationViewModel)
-            Home(loginViewModel = loginViewModel,homeViewModel = homeViewModel,profileViewModel = profileViewModel)
+            Home(loginViewModel = loginViewModel,homeViewModel = homeViewModel,profileViewModel = profileViewModel, recommendationViewModel=recommendationViewModel)
         }
 
     }

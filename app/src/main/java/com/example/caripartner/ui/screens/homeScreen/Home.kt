@@ -46,6 +46,8 @@ import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
 import com.example.caripartner.ui.screens.profileScreen.ProfileScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
 import com.example.caripartner.ui.screens.searchScreen.SearchScreen
+import com.example.caripartner.ui.screens.recommendationScreen.Recommendation
+import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -86,7 +88,7 @@ enum class BottomNavRoutes{
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profileViewModel: ProfileViewModel?){
+fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profileViewModel: ProfileViewModel?,recommendationViewModel: RecommendationViewModel?){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -173,7 +175,10 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
-                        .background(color = Color(0xFF4B4EFC), shape = RoundedCornerShape(size = 12.dp)),
+                        .background(
+                            color = Color(0xFF4B4EFC),
+                            shape = RoundedCornerShape(size = 12.dp)
+                        ),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
                 ) {
                     Text(text = "Logout",
@@ -188,6 +193,7 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
             }
             composable(BottomNavRoutes.Partner.name) {
 //                PartnerScreen()
+                Recommendation(recommendationViewModel = recommendationViewModel)
             }
             composable(BottomNavRoutes.Profile.name) {
                 ProfileScreen(profileViewModel = profileViewModel)

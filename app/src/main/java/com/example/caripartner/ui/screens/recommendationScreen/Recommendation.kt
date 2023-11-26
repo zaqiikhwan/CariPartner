@@ -125,7 +125,7 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    color = Color(0xF1F1F1)
+                    color = Color(android.graphics.Color.parseColor("#D0E4FF"))
                 )
                 .systemBarsPadding()
         ) {
@@ -147,8 +147,7 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
                         )
                     )
                 }
-                
-                Text(text = userData.name?: "Default Name")
+
                 val states = profiles.reversed()
                     .map { it to rememberSwipeableCardState() }
                 var hint by remember {
@@ -162,7 +161,7 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
                     Modifier
                         .padding(0.dp)
                         .fillMaxSize()
-                        .aspectRatio(0.63f)
+                        .aspectRatio(0.715f)
                         .align(Alignment.Center)) {
                     states.forEach { (matchProfile, state) ->
                         if (state.swipedDirection == null) {
@@ -294,7 +293,7 @@ private fun ProfileCard(
 
                         )
                 )
-                matchProfile.preferences.forEach { preference ->
+                matchProfile.preferences?.forEach { preference ->
                     // Lakukan sesuatu dengan setiap elemen dalam list
                     Text(
                         text = "- $preference",
