@@ -153,28 +153,12 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
             }
             composable(BottomNavRoutes.Home.name){
                 HomeScreen(homeViewModel=homeViewModel)
-                Button(onClick = { Firebase.auth.signOut() },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
-                        .background(
-                            color = Color(0xFF4B4EFC),
-                            shape = RoundedCornerShape(size = 12.dp)
-                        ),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
-                ) {
-                    Text(text = "Logout",
-                        fontSize = 18.sp,
-                        lineHeight = 28.sp,
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFFFFFFFF),)
-                }
             }
             composable(BottomNavRoutes.Search.name) {
                 SearchScreen()
             }
             composable(BottomNavRoutes.Partner.name) {
-//                PartnerScreen()
+                PartnerScreen()
                 Recommendation(recommendationViewModel = recommendationViewModel)
             }
             composable(BottomNavRoutes.Profile.name) {
