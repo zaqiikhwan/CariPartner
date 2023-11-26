@@ -13,7 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.caripartner.ui.screens.homeScreen.HomeViewModel
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
-//import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
+import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
 import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
 import com.example.caripartner.ui.theme.CariPartnerTheme
 
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val loginViewModel = viewModel(modelClass = LoginViewModel::class.java)
-//            val recommendationViewModel = viewModel(modelClass = RecommendationViewModel::class.java)
+            val recommendationViewModel = viewModel(modelClass = RecommendationViewModel::class.java)
             val homeViewModel = viewModel(modelClass = HomeViewModel::class.java)
             val profileViewModel = viewModel(modelClass = ProfileViewModel::class.java)
 

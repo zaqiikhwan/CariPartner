@@ -6,13 +6,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.caripartner.ui.screens.homeScreen.Home
+import com.example.caripartner.ui.screens.homeScreen.HomeViewModel
 import com.example.caripartner.ui.screens.loginScreen.LoginScreen
 import com.example.caripartner.ui.screens.loginScreen.LoginViewModel
 import com.example.caripartner.ui.screens.loginScreen.SignUpScreen
-//import com.example.caripartner.ui.screens.recommendationScreen.Recommendation
-import com.example.caripartner.ui.screens.homeScreen.HomeViewModel
 import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
-//import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
+import com.example.caripartner.ui.screens.recommendationScreen.Recommendation
+import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
 
 enum class LoginRoutes{
     SignUp,
@@ -30,7 +30,6 @@ fun Navigation(
     recommendationViewModel : RecommendationViewModel,
     homeViewModel: HomeViewModel,
     profileViewModel: ProfileViewModel,
-//    recommendationViewModel: RecommendationViewModel
 ){
     NavHost(
         navController = navController,
@@ -72,8 +71,9 @@ fun Navigation(
 
         composable(route = HomeRoutes.Home.name){
 //            Home(loginViewModel = loginViewModel)
-            Recommendation(recommendationViewModel = recommendationViewModel)
+            Recommendation(recommendationViewModel = recommendationViewModel) // karena itu ngecrash
             Home(loginViewModel = loginViewModel,homeViewModel = homeViewModel,profileViewModel = profileViewModel, recommendationViewModel=recommendationViewModel)
+//            Home(loginViewModel = loginViewModel, homeViewModel = homeViewModel, profileViewModel = profileViewModel)
         }
 
     }
