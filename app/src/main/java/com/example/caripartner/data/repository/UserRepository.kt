@@ -13,9 +13,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class UserRepository {
     private lateinit var database: DatabaseReference
-    private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()
-    private val AuthRepository: AuthRepository = AuthRepository()
 
     fun CreateUser(
         email: String,
@@ -44,27 +41,28 @@ class UserRepository {
             }
         }
     }
-    fun GetUserLogin(uid: String, callback:(User)-> Unit){
-        database = FirebaseDatabase.getInstance().getReference("Users")
 
-        // Get a reference to the user node in the database
-        val userRef = database.child(uid)
+//    fun GetUserLogin(uid: String, callback: (User) -> Unit) {
+//        database = FirebaseDatabase.getInstance().getReference("Users")
+//
+//        // Get a reference to the user node in the database
+//        val userRef = database.child(uid)
+//
+//        // Read data from the database
+//        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                val userData = snapshot.getValue(User::class.java)
+//                callback(userData!!)
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                // Handle error
+//                Log.e("UserRepository", "Error reading from database: ${error.message}")
+//            }
+//        })
+//    }
 
-        // Read data from the database
-        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val userData = snapshot.getValue(User::class.java)
-                callback(userData!!)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle error
-                Log.e("UserRepository", "Error reading from database: ${error.message}")
-            }
-        })
-    }
-
-//    fun getAllUsersExceptCurrent(callback: (List<User>) -> Unit) {
+    //    fun getAllUsersExceptCurrent(callback: (List<User>) -> Unit) {
 //        // Assuming you have a way to get the current user's UID
 //        val currentUserId = AuthRepository.getUserId()
 //
@@ -112,10 +110,14 @@ class UserRepository {
         })
     }
 
-            }
 
+<<<<<<< HEAD
     fun GetUserLogin(uid: String, callback:(User)-> Unit){
         var database = FirebaseDatabase.getInstance().getReference("Users")
+=======
+    fun GetUserLogin(uid: String, callback: (User) -> Unit) {
+        database = FirebaseDatabase.getInstance().getReference("Users")
+>>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
 
         // Get a reference to the user node in the database
         val userRef = database.child(uid)
@@ -135,14 +137,20 @@ class UserRepository {
     }
 
 
+<<<<<<< HEAD
     fun GetUserPreferences(userId:String):MutableList<String>{
         var database = FirebaseDatabase.getInstance().reference.child("Users").child(userId)
+=======
+    fun GetUserPreferences(userId: String): MutableList<String> {
+        database = FirebaseDatabase.getInstance().reference.child("Users").child(userId)
+>>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
             .child("preferences")
 
-        var preferences:MutableList<String> = mutableListOf ()
+        var preferences: MutableList<String> = mutableListOf()
         database.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot){
-                val userPreferences = snapshot.getValue(object : GenericTypeIndicator<ArrayList<String>>() {})
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userPreferences =
+                    snapshot.getValue(object : GenericTypeIndicator<ArrayList<String>>() {})
                 // Lakukan sesuatu dengan daftar preferensi pengguna
                 if (userPreferences != null) {
                     for ((index, preference) in userPreferences.withIndex()) {
@@ -161,8 +169,17 @@ class UserRepository {
     }
 
 
+<<<<<<< HEAD
     fun GetUserRecommendation(desiredPreferences:MutableList<String>,Uid: String, callback: (List<User>) -> Unit) {
         var database = FirebaseDatabase.getInstance().reference.child("Users")
+=======
+    fun GetUserRecommendation(
+        desiredPreferences: MutableList<String>,
+        Uid: String,
+        callback: (List<User>) -> Unit
+    ) {
+        database = FirebaseDatabase.getInstance().reference.child("Users")
+>>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
 
         var matchingUsers: List<User> = mutableListOf()
 
@@ -173,24 +190,33 @@ class UserRepository {
                 val currentUserData = snapshot.child(currentUser).getValue(User::class.java)
 
                 val filteredUsers = snapshot.children
+<<<<<<< HEAD
                     .filter { it.key != currentUser &&
                             !currentUserData!!.bookmark?.contains(it.key)!! &&
                             !currentUserData.bookmark?.contains(it.key)!!
+=======
+                    .filter {
+                        it.key != currentUser &&
+                                !currentUserData!!.bookmark.contains(it.key) &&
+                                !currentUserData!!.bookmark.contains(it.key)
+>>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
                     } // Hindari user saat ini
                     .filter {
                         val user = it.getValue(User::class.java)
-                        val preferences = user?.preferences?: emptyList()
+                        val preferences = user?.preferences ?: emptyList()
 
                         // Lakukan filter berdasarkan preferensi dan hindari user yang terdaftar di bookmark atau cancel
                         user != null &&
-                                preferences.containsAll(currentUserData?.preferences?: emptyList() ?: emptyList())
+                                preferences.containsAll(
+                                    currentUserData?.preferences ?: emptyList() ?: emptyList()
+                                )
                     }
                     .mapNotNull { it.getValue(User::class.java) }
                     .take(20)
 
 
                 // Lakukan sesuatu dengan daftar filteredUsers
-                matchingUsers=filteredUsers
+                matchingUsers = filteredUsers
 
                 callback(filteredUsers)
             }
@@ -226,6 +252,12 @@ class UserRepository {
         })
     }
 
+<<<<<<< HEAD
 fun BookmarkUser(){
 
+=======
+    fun BookmarkUser() {
+
+    }
+>>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
 }

@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 
-                    Navigation(loginViewModel = loginViewModel, homeViewModel = homeViewModel, profileViewModel = profileViewModel)
+                    Navigation(loginViewModel = loginViewModel, homeViewModel = homeViewModel, recommendationViewModel = recommendationViewModel, profileViewModel = profileViewModel)
 //                    BiodataScreen(profileViewModel = profileViewModel)
                 }
             }

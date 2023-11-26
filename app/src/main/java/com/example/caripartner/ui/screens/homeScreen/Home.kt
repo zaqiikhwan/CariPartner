@@ -47,6 +47,8 @@ import com.example.caripartner.ui.screens.partnerScreen.PartnerScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileScreen
 import com.example.caripartner.ui.screens.profileScreen.ProfileViewModel
 import com.example.caripartner.ui.screens.searchScreen.SearchScreen
+import com.example.caripartner.ui.screens.recommendationScreen.Recommendation
+import com.example.caripartner.ui.screens.recommendationScreen.RecommendationViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -87,7 +89,7 @@ enum class BottomNavRoutes{
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profileViewModel: ProfileViewModel?){
+fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profileViewModel: ProfileViewModel?,recommendationViewModel: RecommendationViewModel?){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -151,12 +153,36 @@ fun Home(loginViewModel: LoginViewModel?, homeViewModel: HomeViewModel?, profile
             }
             composable(BottomNavRoutes.Home.name){
                 HomeScreen(homeViewModel=homeViewModel)
+<<<<<<< HEAD
+=======
+                Button(onClick = { Firebase.auth.signOut() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 100.dp, top = 200.dp, bottom = 100.dp, end = 100.dp)
+                        .background(
+                            color = Color(0xFF4B4EFC),
+                            shape = RoundedCornerShape(size = 12.dp)
+                        ),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B4EFC))
+                ) {
+                    Text(text = "Logout",
+                        fontSize = 18.sp,
+                        lineHeight = 28.sp,
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFFFFFFFF),)
+                }
+>>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
             }
             composable(BottomNavRoutes.Search.name) {
                 SearchScreen()
             }
             composable(BottomNavRoutes.Partner.name) {
+<<<<<<< HEAD
                 PartnerScreen()
+=======
+//                PartnerScreen()
+                Recommendation(recommendationViewModel = recommendationViewModel)
+>>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
             }
             composable(BottomNavRoutes.Profile.name) {
                 ProfileScreen(profileViewModel = profileViewModel, navController)

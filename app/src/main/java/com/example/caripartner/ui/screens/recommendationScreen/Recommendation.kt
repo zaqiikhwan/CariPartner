@@ -116,6 +116,7 @@ package com.example.caripartner.ui.screens.recommendationScreen//package com.exa
 //        if (user != null) {
 //            userData = user
 //        }
+<<<<<<< HEAD
 //    }
 //
 //    var selectedUser by remember { mutableStateOf<String?>(null) }
@@ -393,3 +394,289 @@ package com.example.caripartner.ui.screens.recommendationScreen//package com.exa
 //        }
 //    }
 //}
+=======
+    }
+    print("-------Hey--------")
+    var userData: User by remember { mutableStateOf(User()) }
+
+    recommendationViewModel?.GetUserData(){user ->
+        if (user != null) {
+            userData = user
+        }
+    }
+
+    var selectedUser by remember { mutableStateOf<String?>(null) }
+
+    SwipeableCardTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    color = Color(android.graphics.Color.parseColor("#D0E4FF"))
+                )
+                .systemBarsPadding()
+        ) {
+            Box {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(66.dp)
+                    .background(color = Color.White),
+                ) {
+                    Text(text = "Rekomendasi",modifier= Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp),
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            lineHeight = 24.sp,
+                            fontWeight = FontWeight(600),
+                            color = Color(0xFF101828),
+                            textAlign = TextAlign.Center,
+                        )
+                    )
+                }
+
+                val states = profiles.reversed()
+                    .map { it to rememberSwipeableCardState() }
+                var hint by remember {
+                    mutableStateOf("Swipe a card or press a button below")
+                }
+
+                Hint(hint)
+
+                val scope = rememberCoroutineScope()
+                Box(
+                    Modifier
+                        .padding(0.dp)
+                        .fillMaxSize()
+                        .aspectRatio(0.715f)
+                        .align(Alignment.Center)) {
+                    states.forEach { (matchProfile, state) ->
+                        if (state.swipedDirection == null) {
+                            ProfileCard(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .swipableCard(
+                                        state = state,
+//                                        blockedDirections = listOf(Direction.Down,Direction.Up),
+                                        onSwiped = {
+                                            // swipes are handled by the LaunchedEffect
+                                            // so that we track button clicks & swipes
+                                            // from the same place
+                                        },
+                                        onSwipeCancel = {
+                                            Log.d("Swipeable-Card", "Cancelled swipe")
+                                            hint = "You canceled the swipe"
+                                        }
+                                    ),
+                                matchProfile = matchProfile,
+                                recommendationViewModel = recommendationViewModel
+                            )
+                        }
+                        LaunchedEffect(matchProfile, state.swipedDirection) {
+                            if (state.swipedDirection != null) {
+                                hint = "You swiped ${stringFrom(state.swipedDirection!!)}"
+                            }
+                        }
+                    }
+                }
+                Row(
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 24.dp, vertical = 32.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    CircleButton(
+                        onClick = {
+                            scope.launch {
+                                val last = states.reversed()
+                                    .firstOrNull {
+                                        it.second.offset.value == Offset(0f, 0f)
+                                    }?.second
+                                last?.swipe(Direction.Left)
+                            }
+
+                        },
+                        icon = Icons.Rounded.ArrowForward
+                    )
+                    CircleButton(
+                        onClick = {
+                            scope.launch {
+                                val last = states.reversed()
+                                    .firstOrNull {
+                                        it.second.offset.value == Offset(0f, 0f)
+                                    }?.second
+
+                                last?.swipe(Direction.Right)
+                            }
+                        },
+                        icon = Icons.Rounded.AccountCircle
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun CircleButton(
+    onClick: () -> Unit,
+    icon: ImageVector,
+) {
+    IconButton(
+        modifier = Modifier
+            .clip(CircleShape)
+            .background(Color.Blue)
+            .size(70.dp)
+            .border(2.dp, Color.Blue, CircleShape),
+        onClick = onClick
+    ) {
+        Icon(icon, null,
+            tint = Color.White,
+            modifier = Modifier.size(50.dp)
+        )
+    }
+}
+
+@Composable
+private fun ProfileCard(
+    modifier: Modifier,
+//    matchProfile: MatchProfile,
+    matchProfile:User,
+    recommendationViewModel: RecommendationViewModel? = null
+) {
+    var image:String by remember { mutableStateOf("") }
+    recommendationViewModel!!.getImageUrl(matchProfile.profil!!){url->
+        image=url
+    }
+    Card(modifier) {
+        Box() {
+            Image(contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+                painter = rememberImagePainter(data = image),
+                contentDescription = null)
+            Scrim(Modifier.align(Alignment.BottomCenter))
+            Column(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .align(Alignment.BottomStart)
+                    .padding(bottom = 80.dp)
+                ) {
+                Text(text = matchProfile.name!!,
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        lineHeight = 36.sp),
+                    fontWeight = FontWeight(700),
+                    color = Color(0xFFFFFFFF)
+                )
+                Text(
+                    text = "Minat Lomba:",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        lineHeight = 16.sp,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFFFFFFFF),
+
+                        )
+                )
+                matchProfile.preferences?.forEach { preference ->
+                    // Lakukan sesuatu dengan setiap elemen dalam list
+                    Text(
+                        text = "- $preference",
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            lineHeight = 16.sp,
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFFFFFFF),
+
+                            )
+                        )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Hint(text: String) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .padding(horizontal = 24.dp, vertical = 80.dp)
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = text,
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            fontSize = 22.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun TransparentSystemBars() {
+    val systemUiController = rememberSystemUiController()
+    val useDarkIcons = false
+
+    DisposableEffect(systemUiController, useDarkIcons) {
+        systemUiController.setSystemBarsColor(
+            color = Color.Transparent,
+            darkIcons = useDarkIcons,
+            isNavigationBarContrastEnforced = false
+        )
+        onDispose {}
+    }
+}
+
+private fun stringFrom(direction: Direction): String {
+    return when (direction) {
+        Direction.Left -> "Left 👈"
+        Direction.Right -> "Right 👉"
+        Direction.Up -> "Up 👆"
+        Direction.Down -> "Down 👇"
+    }
+}
+
+
+@Composable
+fun Scrim(modifier: Modifier = Modifier) {
+    Box(
+        modifier
+            .background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black)))
+            .height(180.dp)
+            .fillMaxWidth())
+}
+
+
+@Preview(showSystemUi = true)
+@Composable
+fun PrevRecommendationScreen(){
+    CariPartnerTheme {
+        Recommendation()
+    }
+}
+
+
+@Composable
+fun UserDetailScreen(userId: String, onNavigateUp: () -> Unit) {
+    // Tampilkan detail user
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text("Detail User: $userId")
+
+        // Tambahkan opsi untuk kembali ke halaman daftar user
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = onNavigateUp) {
+            Text("Back to User List")
+        }
+    }
+}
+>>>>>>> 61670eeddc0b5cb48130d710edbdd9e9fa2d1955
