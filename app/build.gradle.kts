@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    id("kotlin-android-extensions")
 //    kotlin("kapt")
 //    id("com.google.dagger.hilt.android")
 }
@@ -86,6 +87,25 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended:1.3.1")
 
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+//    retrofit for chat
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+//    Chat Activity
+    implementation ("androidx.appcompat:appcompat:1.3.1")
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.3.9")
+
+//    layout
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
+//    user activity firebase
+    implementation ("com.google.firebase:firebase-messaging:23.3.1") // Gantilah versi dengan versi terbaru
+
+
+
 
 //    Hilt
 //    implementation("com.google.dagger:hilt-android:2.44")
