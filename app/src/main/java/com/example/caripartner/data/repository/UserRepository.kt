@@ -9,6 +9,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 class UserRepository {
@@ -25,7 +26,7 @@ class UserRepository {
     ) {
         database = FirebaseDatabase.getInstance().getReference("Users")
 
-        val User = User(email, name, isVerified, ktm, password)
+        val User = User(email=email,name= name, isAvailable =  isVerified, ktm = ktm, password = password, profil = "profil", preferences = listOf("1"))
 
 
         database.child(Uid).setValue(User).addOnCompleteListener { task ->
@@ -178,7 +179,7 @@ class UserRepository {
                     .filter {
                         it.key != currentUser &&
                                 !currentUserData!!.bookmark.contains(it.key) &&
-                                !currentUserData!!.bookmark.contains(it.key)
+                                !currentUserData!!.cancel.contains(it.key)
                     } // Hindari user saat ini
                     .filter {
                         val user = it.getValue(User::class.java)
@@ -231,7 +232,65 @@ class UserRepository {
         })
     }
 
-    fun BookmarkUser() {
+    fun BookmarkUser(userId: String, bookmarkUserId: String) {
+        val database: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
 
+        // Mendapatkan referensi ke user yang akan ditambahkan bookmark
+        val userRef = database.child(userId).child("bookmark")
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // Mendapatkan nilai bookmark saat ini
+                val currentBookmarks = snapshot.getValue<List<String>>()
+
+                // Membuat atau menginisialisasi list jika belum ada
+                val updatedBookmarks = if (currentBookmarks != null) {
+                    currentBookmarks as MutableList<String>
+                } else {
+                    mutableListOf()
+                }
+
+                // Menambahkan user ke daftar bookmark
+                updatedBookmarks.add(bookmarkUserId)
+
+                // Memperbarui nilai bookmark di Firebase
+                userRef.setValue(updatedBookmarks)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
+    }
+
+    fun CancelUser(userId: String, cancelUserId: String) {
+        val database: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
+
+        // Mendapatkan referensi ke user yang akan ditambahkan bookmark
+        val userRef = database.child(userId).child("cancel")
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // Mendapatkan nilai bookmark saat ini
+                val currentCancels = snapshot.getValue<List<String>>()
+
+                // Membuat atau menginisialisasi list jika belum ada
+                val updatedCancels = if (currentCancels != null) {
+                    currentCancels as MutableList<String>
+                } else {
+                    mutableListOf()
+                }
+
+                // Menambahkan user ke daftar bookmark
+                updatedCancels.add(cancelUserId)
+
+                // Memperbarui nilai bookmark di Firebase
+                userRef.setValue(updatedCancels)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle error
+            }
+        })
     }
 }

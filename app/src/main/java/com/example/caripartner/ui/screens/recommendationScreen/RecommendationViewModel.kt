@@ -34,4 +34,17 @@ class RecommendationViewModel(
             imageUrl(url)
         }
     }
+
+    fun AddBookMark(email:String){
+        println("GGGGGGGGGGGGGGGG")
+        UserRepository.GetTargetUserIdByEmail(email){id->
+            UserRepository.BookmarkUser(userId = AuthRepository.getUserId(),bookmarkUserId=id?:"")
+        }
+    }
+
+    fun AddCancel(email: String){
+        UserRepository.GetTargetUserIdByEmail(email){id->
+            UserRepository.CancelUser(userId = AuthRepository.getUserId(),cancelUserId=id?:"")
+        }
+    }
 }

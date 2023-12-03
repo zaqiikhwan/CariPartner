@@ -18,8 +18,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.ArrowForward
+import androidx.compose.material.icons.rounded.Cancel
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.Dangerous
+import androidx.compose.material.icons.rounded.StarOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -101,7 +107,6 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
 //            println(url)
 //        }
     }
-    print("-------Hey--------")
     var userData: User by remember { mutableStateOf(User()) }
 
     recommendationViewModel?.GetUserData(){user ->
@@ -168,7 +173,7 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
                                         },
                                         onSwipeCancel = {
                                             Log.d("Swipeable-Card", "Cancelled swipe")
-                                            hint = "You canceled the swipe"
+//                                            hint = "You canceled the swipe"
                                         }
                                     ),
                                 matchProfile = matchProfile,
@@ -176,9 +181,14 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
                             )
                         }
                         LaunchedEffect(matchProfile, state.swipedDirection) {
-                            if (state.swipedDirection != null) {
-                                hint = "You swiped ${stringFrom(state.swipedDirection!!)}"
+                            if (state.swipedDirection == Direction.Right) {
+                                recommendationViewModel?.AddBookMark(matchProfile.email?:"")
+                            }else if (state.swipedDirection == Direction.Left){
+                                recommendationViewModel?.AddCancel(matchProfile.email?:"")
                             }
+//                            if (state.swipedDirection != null) {
+//                                hint = "You swiped ${stringFrom(state.swipedDirection!!)}"
+//                            }
                         }
                     }
                 }
@@ -200,7 +210,7 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
                             }
 
                         },
-                        icon = Icons.Rounded.ArrowForward
+                        icon = Icons.Rounded.Close
                     )
                     CircleButton(
                         onClick = {
@@ -213,7 +223,7 @@ fun Recommendation(recommendationViewModel: RecommendationViewModel? = null){
                                 last?.swipe(Direction.Right)
                             }
                         },
-                        icon = Icons.Rounded.AccountCircle
+                        icon = Icons.Rounded.StarOutline
                     )
                 }
             }
@@ -250,9 +260,9 @@ private fun ProfileCard(
     recommendationViewModel: RecommendationViewModel? = null
 ) {
     var image:String by remember { mutableStateOf("") }
-//    recommendationViewModel!!.getImageUrl(matchProfile.profil!!){url->
-//        image=url
-//    }
+    recommendationViewModel!!.getImageUrl(matchProfile.profil!!){url->
+        image=url
+    }
     Card(modifier) {
         Box() {
             Image(contentScale = ContentScale.Crop,
